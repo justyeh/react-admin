@@ -1,0 +1,57 @@
+.login-page {
+    height: 100%;
+    background-color: #193c6d;
+    background-size: cover;
+    background-image: url(//img.alicdn.com/tps/TB1d.u8MXXXXXXuXFXXXXXXXXXX-1900-790.jpg);
+    background-image: linear-gradient(135deg, #003073, #029797);
+    overflow: hidden;
+
+    .bg,
+    .app {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+    }
+
+    .app {
+        display: flex;
+        overflow: hidden;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    h2 {
+        color: #fff;
+        padding: 0 0 20px 0;
+        font-size: 30px;
+    }
+
+    .form {
+        width: 360px;
+        height: 400px;
+        .ant-input-prefix i{
+            color: #fff;
+        }
+        .ant-input {
+            height: 40px;
+            line-height: 40px;
+            border-radius: 4px;
+            background: transparent;
+            border: solid 1px #f7fafc;
+            color: #fff;
+            font-size: 16px;
+            text-indent: 5px;
+            &::-webkit-input-placeholder {
+                color: #fff;
+            }
+        }
+        .ant-btn{
+            font-size: 18px;
+            height: 40px;
+        }
+    }
+
+}
