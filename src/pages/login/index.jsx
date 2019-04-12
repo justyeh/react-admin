@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Form, Icon, Input, Button } from "antd";
 
 import * as THREE from "three";
-import "./style.less";
+import "./login.less";
 import http from "@/libs/http";
 import { storage, getQueryVariable } from "@/libs/utils";
 
@@ -157,10 +157,6 @@ class LoginForm extends Component {
                         <FormItem>
                             {getFieldDecorator("email", {
                                 rules: [
-                                    /*  {
-                                type: 'email',
-                                message: '请输入正确的邮箱地址'
-                            }, */
                                     {
                                         required: true,
                                         message: "请输入邮箱地址"

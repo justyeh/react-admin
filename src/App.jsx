@@ -15,7 +15,7 @@ class App extends Component {
     }
   }
   
-  render() {
+  render() { 
     return (
       <BrowserRouter
         basename={basePath}
@@ -27,7 +27,7 @@ class App extends Component {
           />
           {routes.map(item=>{
               return (
-                  <AuthRoute {...item} key={item.path}></AuthRoute>
+                  <AuthRoute {...item} key={item.path || item.key}></AuthRoute>
               )
           })}
         </Switch>

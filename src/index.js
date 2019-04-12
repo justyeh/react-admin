@@ -10,7 +10,8 @@ import { LocaleProvider } from "antd";
 import zhCN from "antd/lib/locale-provider/zh_CN";
 
 //全局配置组件属性
-import { Table } from "antd";
+import { Table, Modal } from "antd";
+Modal.defaultProps.maskClosable = false;
 Table.defaultProps = {
     size: "middle",
     pagination: false

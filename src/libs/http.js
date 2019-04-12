@@ -2,7 +2,6 @@ import axios from "axios";
 import { storage } from "@/libs/utils";
 import { message } from "antd";
 import { basePath } from "@/appConfig";
-import { withRouter } from "react-router-dom";
 
 const http = axios.create({
     timeout: 5000,

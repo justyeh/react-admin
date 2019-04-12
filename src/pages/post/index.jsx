@@ -1,88 +1,17 @@
 import React, { Component } from "react";
-import { Table, Tag, message, Input, Button } from "antd";
+import { Table, Tag, message, Input, Button, Modal } from "antd";
 import Tab from "@/components/Tab";
 import Page from "@/components/Page";
 import http from "@/libs/http";
 import "./post.less";
 
+const confirm = Modal.confirm;
 const Search = Input.Search;
 
 const tabList = [
     { value: "published", label: "已发布" },
     { value: "draft", label: "草稿" },
     { value: "offline", label: "被下线" }
-];
-
-const postColumns = [
-    {
-        title: "图片",
-        dataIndex: "poster",
-        key: "poster",
-        align: "center",
-        render: poster =>
-            poster ? (
-                <img src={poster} className="poster" alt="poster" />
-            ) : (
-                <div className="poster" />
-            )
-    },
-    {
-        title: "标题",
-        dataIndex: "title",
-        key: "title",
-        align: "left",
-        render: (text, record) => (
-            <a
-                href={`/post/${record.id}`}
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-                {text}
-            </a>
-        )
-    },
-    {
-        title: "标签",
-        dataIndex: "tagList",
-        key: "tagList",
-        align: "center",
-        render: tagList => (
-            <div>
-                {tagList.map(tag => {
-                    return <Tag key={tag.id}>{tag.name}</Tag>;
-                })}
-            </div>
-        )
-    },
-    {
-        title: "操作",
-        dataIndex: "handle",
-        key: "handle",
-        width: 100,
-        fixed: "right",
-        align: "center",
-        render: (text, record, index) => {
-            return (
-                <div className="handle">
-                    {record.status === "offline" ? (
-                        <a
-                            href="javascript:;"
-                            onClick={() => this.deletePost(index)}
-                        >
-                            删除
-                        </a>
-                    ) : (
-                        <a
-                            href="javascript:;"
-                            onClick={() => this.editPost(index)}
-                        >
-                            编辑
-                        </a>
-                    )}
-                </div>
-            );
-        }
-    }
 ];
 
 export default class Post extends Component {
@@ -99,6 +28,69 @@ export default class Post extends Component {
             },
             tableLoading: false
         };
+        this.postColumns = [
+            {
+                title: "图片",
+                dataIndex: "poster",
+                align: "center",
+                render: poster =>
+                    poster ? (
+                        <img src={poster} className="poster" alt="poster" />
+                    ) : (
+                        <div className="poster" />
+                    )
+            },
+            {
+                title: "标题",
+                dataIndex: "title",
+                align: "left",
+                render: (text, record) => (
+                    <a
+                        href={`/post/${record.id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        {text}
+                    </a>
+                )
+            },
+            {
+                title: "标签",
+                dataIndex: "tagList",
+                align: "center",
+                render: tagList => (
+                    <div>
+                        {tagList.map(tag => {
+                            return <Tag key={tag.id}>{tag.name}</Tag>;
+                        })}
+                    </div>
+                )
+            },
+            {
+                title: "操作",
+                dataIndex: "handle",
+                width: 100,
+                fixed: "right",
+                align: "center",
+                render: (text, record, index) => {
+                    return (
+                        <div className="handle">
+                            {record.status === "offline" ? (
+                                <button onClick={() => this.deletePost(index)}>
+                                    删除
+                                </button>
+                            ) : (
+                                <button
+                                    onClick={() => this.editPost(record.id)}
+                                >
+                                    编辑
+                                </button>
+                            )}
+                        </div>
+                    );
+                }
+            }
+        ];
     }
 
     componentWillMount() {
@@ -169,11 +161,36 @@ export default class Post extends Component {
         });
     }
 
-    addPost = () => {};
+    addPost = () => {
+        this.props.history.push("/post-form");
+    };
 
-    editPost = index => {};
+    editPost = id => {
+        this.props.history.push(`/post-form?id=${id}`);
+    };
 
-    deletePost = index => {};
+    deletePost = index => {
+        confirm({
+            title: "确定删除该文章吗？",
+            onOk: async () => {
+                let res = await http.post("/api/post/delete", {
+                    id: this.state.postList[index].id
+                });
+                if (res) {
+                    let page = this.state.page;
+                    if (this.state.commentList.length === 1) {
+                        page.pageIndex -= page.pageIndex;
+                    }
+                    this.setState(
+                        {
+                            page
+                        },
+                        this.getPostList
+                    );
+                }
+            }
+        });
+    };
 
     render() {
         return (
@@ -198,10 +215,12 @@ export default class Post extends Component {
                         新增
                     </Button>
                 </div>
+                <h2 className="page-title container">博客列表</h2>
                 <div className="container">
                     <Table
+                        rowKey={record => record.id}
                         dataSource={this.state.postList}
-                        columns={postColumns}
+                        columns={this.postColumns}
                         loading={this.state.tableLoading}
                         scroll={{ x: 1000 }}
                     />
