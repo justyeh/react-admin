@@ -20,7 +20,7 @@ class Header extends Component {
         return (
             <header className="header">
                 <div>
-                    <a href="/">返回前台</a>
+                    <a href="http://www.justyeh.top">返回前台</a>
                 </div>
                 <div className="user">
                     <img src={headImage} alt="" />

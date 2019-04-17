@@ -56,7 +56,7 @@ export default class Post extends Component {
                 align: "left",
                 render: (text, record) => (
                     <a
-                        href={`/post/${record.id}`}
+                        href={`http://www.justyeh.top/post/${record.id}`}
                         target="_blank"
                         rel="noopener noreferrer"
                     >

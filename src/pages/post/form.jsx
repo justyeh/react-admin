@@ -121,7 +121,7 @@ class PostForm extends Component {
 
             var formData = new FormData();
             formData.append("title", formValue.title);
-            
+
             formData.append(
                 "poster",
                 formValue.poster
@@ -148,10 +148,10 @@ class PostForm extends Component {
                     headers: {
                         "Content-type": "multipart/form-data"
                     },
-                    data:formData
+                    data: formData
                 });
                 if (res) {
-                    //this.props.history.goBack();
+                    this.props.history.goBack();
                 }
 
                 this.setState({
@@ -209,7 +209,7 @@ class PostForm extends Component {
                     <img
                         src={this.state.uploadPreview}
                         className="preview"
-                        alt="logo"
+                        alt="poster"
                     />
                 )}
                 <div className="delete">

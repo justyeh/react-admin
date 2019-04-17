@@ -16,7 +16,6 @@ export default class Sidebar extends Component {
         return className;
     };
     render() {
-        console.log();
         return (
             <div className="sidebar">
                 <div className="site-name">博客后台管理系统</div>

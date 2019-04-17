@@ -38,7 +38,7 @@ export default class Tag extends Component {
                             ) : (
                                 postList.map(item => (
                                     <div key={item.id}>
-                                        <a href={`/post/${item.id}`}>
+                                        <a href={`http://www.justyeh.top/post/${item.id}`}>
                                             {item.title}
                                         </a>
                                     </div>

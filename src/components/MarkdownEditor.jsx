@@ -42,7 +42,8 @@ export default class MarkdownEditor extends Component {
         this.editor = CodeMirror.fromTextArea(this.editorRef.current, {
             mode: "markdown",
             theme: "paper",
-            height: 500
+            height: 500,
+            lineWrapping: true
         });
         this.editor.on("change", this.handleChange);
         this.editor.on("scroll", () => this.handleScroll("editor"));

@@ -1,1 +1,1 @@
-export const basePath = '/admin';
+export const basePath = '';
