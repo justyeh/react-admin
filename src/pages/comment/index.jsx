@@ -48,7 +48,9 @@ export default class comment extends Component {
                 align: "left",
                 width: 300,
                 render: (text, record) => (
-                    <a href={`http://www.justyeh.top/post/${record.postId}`}>{text}</a>
+                    <a href={`http://www.justyeh.top/post/${record.postId}`}>
+                        {text}
+                    </a>
                 )
             },
             {
@@ -174,11 +176,11 @@ export default class comment extends Component {
                 });
                 if (res) {
                     let page = this.state.page;
-                    if (
+                    let isPageIndexReduce =
                         ids.length === this.state.commentList.length &&
-                        this.state.page.pageIndex - 1 > 0
-                    ) {
-                        page.pageIndex -= page.pageIndex;
+                        this.state.page.pageIndex - 1 > 0;
+                    if (isPageIndexReduce) {
+                        page.pageIndex = page.pageIndex - 1;
                     }
                     this.setState(
                         {
