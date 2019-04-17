@@ -136,5 +136,5 @@ export const getQueryVariable = (url, variable) => {
             return pair[1];
         }
     }
-    return false;
+    return "";
 };

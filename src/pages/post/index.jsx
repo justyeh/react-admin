@@ -3,6 +3,8 @@ import { Table, Tag, message, Input, Button, Modal } from "antd";
 import Tab from "@/components/Tab";
 import Page from "@/components/Page";
 import http from "@/libs/http";
+import { getQueryVariable } from "@/libs/utils";
+
 import "./post.less";
 
 const confirm = Modal.confirm;
@@ -17,13 +19,21 @@ const tabList = [
 export default class Post extends Component {
     constructor(props) {
         super();
+        let search = props.location.search;
+        let pageIndex = getQueryVariable(search, "pageIndex")
+            ? parseInt(getQueryVariable(search, "pageIndex"))
+            : 1;
+        let pageSize = getQueryVariable(search, "pageSize")
+            ? parseInt(getQueryVariable(search, "pageSize"))
+            : 15;
+        let keyword = getQueryVariable(search, "keyword");
         this.state = {
             status: tabList[0].value,
-            keyword: "",
+            keyword,
             postList: [],
             page: {
-                pageIndex: 1,
-                pageSize: 10,
+                pageIndex,
+                pageSize,
                 total: 0
             },
             tableLoading: false
@@ -162,10 +172,22 @@ export default class Post extends Component {
     }
 
     addPost = () => {
+        let { page, keyword } = this.state;
+        this.props.history.replace(
+            `/post?pageIndex=${page.pageIndex}&pageSize=${
+                page.pageSize
+            }&keyword=${keyword}`
+        );
         this.props.history.push("/post-form");
     };
 
     editPost = id => {
+        let { page, keyword } = this.state;
+        this.props.history.replace(
+            `/post?pageIndex=${page.pageIndex}&pageSize=${
+                page.pageSize
+            }&keyword=${keyword}`
+        );
         this.props.history.push(`/post-form?id=${id}`);
     };
 

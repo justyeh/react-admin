@@ -34,6 +34,7 @@ http.interceptors.response.use(
         }
     },
     error => {
+        console.log(error)
         message.error("网络错误，请稍后再试！");
         return false;
     }

@@ -5,7 +5,7 @@
     line-height: 1.4;
 }
 
-@media screen and (max-width:960px){
+@media screen and (max-width:960px) {
     .md {
         font-size: 14px;
     }
@@ -131,9 +131,11 @@
     overflow-x: auto;
 }
 
-.md .hljs {
-	background-color: #002b36;
-	padding: 10px;
+.md pre>code {
+    display: block;
+    background-color: #002b36;
+    padding: 10px;
+    overflow-x: auto;
 }
 
 .md p>code {

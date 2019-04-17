@@ -29,7 +29,13 @@ export default class comment extends Component {
                 title: "评论人",
                 dataIndex: "name",
                 align: "center",
-                width: 120
+                width: 100
+            },
+            {
+                title: "联系方式",
+                dataIndex: "contacts",
+                align: "center",
+                width: 140
             },
             {
                 title: "评论内容",
@@ -210,7 +216,7 @@ export default class comment extends Component {
                         dataSource={this.state.commentList}
                         columns={this.commentColumns}
                         loading={this.state.tableLoading}
-                        scroll={{ x: 1000 }}
+                        scroll={{ x: 1200 }}
                     />
                 </div>
                 <div className="container flex-between">

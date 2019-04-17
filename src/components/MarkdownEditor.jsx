@@ -14,7 +14,7 @@ export default class MarkdownEditor extends Component {
             preview: false,
             fullscreen: false,
             sideMode: false,
-            mdContent: props.value
+            markdownContent: ""
         };
         this.editorRef = React.createRef();
     }
@@ -36,8 +36,28 @@ export default class MarkdownEditor extends Component {
         window.addEventListener("keydown", this.onKeyDown, false);
     }
 
+    componentDidMount() {
+        this._html = document.querySelector(".html");
+        this._md = document.querySelector(".html .md");
+        this.editor = CodeMirror.fromTextArea(this.editorRef.current, {
+            mode: "markdown",
+            theme: "paper",
+            height: 500
+        });
+        this.editor.on("change", this.handleChange);
+        this.editor.on("scroll", () => this.handleScroll("editor"));
+    }
+
     componentWillUnmount() {
         window.removeEventListener("keydown", this.onKeyDown);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (this.receivedValue || !nextProps.value) {
+            return false;
+        }
+        this.receivedValue = true;
+        this.editor.setValue(nextProps.value);
     }
 
     onKeyDown = e => {
@@ -54,14 +74,6 @@ export default class MarkdownEditor extends Component {
         }
     };
 
-    componentDidMount() {
-        this.editor = CodeMirror.fromTextArea(this.editorRef.current, {
-            mode: "markdown",
-            theme: "default"
-        });
-        this.editor.on("change", this.handleChange);
-    }
-
     togglePreview = () => {
         let { preview, sideMode } = this.state;
         if (sideMode) {
@@ -69,7 +81,8 @@ export default class MarkdownEditor extends Component {
         }
         this.setState({
             preview: !preview,
-            sideMode
+            sideMode,
+            markdownContent: this.editor.getValue()
         });
     };
 
@@ -84,23 +97,65 @@ export default class MarkdownEditor extends Component {
         if (preview) {
             preview = false;
         }
-        this.setState({
-            preview,
-            sideMode: !sideMode
-        });
+        this.setState(
+            {
+                preview,
+                sideMode: !sideMode,
+                markdownContent: this.editor.getValue()
+            },
+            () => {
+                if (this.state.sideMode) {
+                    this.handleScroll("editor");
+                }
+            }
+        );
     };
 
     handleChange = val => {
         if (this.state.preview || this.state.sideMode) {
             this.setState({
-                mdContent: val.getValue()
+                markdownContent: val.getValue()
             });
         }
     };
 
-    render() {
-        let { preview, fullscreen, sideMode, mdContent } = this.state;
+    //双向的滚动支持
+    handleScroll = target => {
+        if (!this.state.sideMode) {
+            return;
+        }
+        if (target === "editor" && !this.editorScrollLoack) {
+            this.htmlScollLock = true;
+            this._html.scrollTop =
+                this._md.clientHeight *
+                (this.editor.doc.scrollTop / this.editor.doc.height);
 
+            let timer = setTimeout(() => {
+                this.htmlScollLock = false;
+                clearTimeout(timer);
+            }, 200);
+        }
+
+        if (target === "html" && !this.htmlScollLock) {
+            this.editorScrollLoack = true;
+            let scrollToP =
+                this.editor.doc.height *
+                (this._html.scrollTop / this._md.clientHeight);
+            this.editor.scrollTo(this.editor.doc.scrollLeft, scrollToP);
+
+            let timer = setTimeout(() => {
+                this.editorScrollLoack = false;
+                clearTimeout(timer);
+            }, 200);
+        }
+    };
+
+    getValue = () => {
+        return this.editor.getValue();
+    };
+
+    render() {
+        let { preview, fullscreen, sideMode, markdownContent } = this.state;
         let markdownClass = ["markdown"];
         preview && markdownClass.push("preview");
         fullscreen && markdownClass.push("fullscreen");
@@ -139,17 +194,16 @@ export default class MarkdownEditor extends Component {
                 </div>
                 <div className="box">
                     <div className="editor">
-                        <textarea
-                            id="code"
-                            ref={this.editorRef}
-                            defaultValue={mdContent}
-                        />
+                        <textarea id="code" ref={this.editorRef} />
                     </div>
-                    <div className="html">
+                    <div
+                        className="html"
+                        onScroll={() => this.handleScroll("html")}
+                    >
                         <div
                             className="md"
                             dangerouslySetInnerHTML={{
-                                __html: marked(mdContent)
+                                __html: marked(markdownContent)
                             }}
                         />
                     </div>

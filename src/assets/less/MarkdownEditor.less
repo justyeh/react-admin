@@ -1,3 +1,4 @@
+@import './codemirror.css';
 @import './yeh-md-theme.css';
 @import './ocean.min.css';
 
@@ -52,6 +53,24 @@
     .editor {
         overflow: auto;
         max-height: 600px;
+        line-height: 1.4;
+        font-size: 14px;
+
+        .CodeMirror {
+            padding: 5px;
+            height: 500px;
+            /*  max-height: 600px; */
+            /*  height: auto; */
+        }
+
+        /* .CodeMirror-scroll {
+            height: auto;
+        } */
+
+        /*  .CodeMirror-scroll {
+            height: auto;
+            max-height: 600px;
+        } */
     }
 
     .html {
@@ -107,6 +126,10 @@
     .box {
         position: relative;
         height: calc(100% - 50px);
+    }
+
+    .editor .CodeMirror {
+        height: 100%;
     }
 
     .editor,
