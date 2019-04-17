@@ -19,6 +19,7 @@ export default class Page extends Component {
                     current={this.props.pageIndex}
                     pageSize={this.props.pageSize}
                     total={this.props.total}
+                    pageSizeOptions={["15", "30", "100"]}
                     onShowSizeChange={(current, size) =>
                         this.props.onChange(1, size)
                     }

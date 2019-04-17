@@ -18,7 +18,7 @@ export default class comment extends Component {
             commentList: [],
             page: {
                 pageIndex: 1,
-                pageSize: 20,
+                pageSize: 30,
                 total: 0
             },
             tableLoading: false,
