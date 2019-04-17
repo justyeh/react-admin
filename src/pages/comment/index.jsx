@@ -48,7 +48,7 @@ export default class comment extends Component {
                 align: "left",
                 width: 300,
                 render: (text, record) => (
-                    <a href={`http://www.justyeh.top/post/${record.postId}`}>
+                    <a href={`http://www.justyeh.top/post/${record.postId}`} rel="noopener noreferrer" target="_blank">
                         {text}
                     </a>
                 )

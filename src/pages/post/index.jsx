@@ -57,8 +57,8 @@ export default class Post extends Component {
                 render: (text, record) => (
                     <a
                         href={`http://www.justyeh.top/post/${record.id}`}
-                        target="_blank"
                         rel="noopener noreferrer"
+                        target="_blank"
                     >
                         {text}
                     </a>
