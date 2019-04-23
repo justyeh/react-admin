@@ -27,8 +27,9 @@ export default class Post extends Component {
             ? parseInt(getQueryVariable(search, "pageSize"))
             : 15;
         let keyword = getQueryVariable(search, "keyword");
+        let status = getQueryVariable(search, "status") || tabList[0].value;
         this.state = {
-            status: tabList[0].value,
+            status,
             keyword,
             postList: [],
             page: {
@@ -172,21 +173,21 @@ export default class Post extends Component {
     }
 
     addPost = () => {
-        let { page, keyword } = this.state;
+        let { page, keyword, status } = this.state;
         this.props.history.replace(
             `/post?pageIndex=${page.pageIndex}&pageSize=${
                 page.pageSize
-            }&keyword=${keyword}`
+            }&keyword=${keyword}&status=${status}`
         );
         this.props.history.push("/post-form");
     };
 
     editPost = id => {
-        let { page, keyword } = this.state;
+        let { page, keyword, status } = this.state;
         this.props.history.replace(
             `/post?pageIndex=${page.pageIndex}&pageSize=${
                 page.pageSize
-            }&keyword=${keyword}`
+            }&keyword=${keyword}&status=${status}`
         );
         this.props.history.push(`/post-form?id=${id}`);
     };

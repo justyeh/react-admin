@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
 import routes from "@/router/";
 import { basePath } from "@/appConfig";
+import http from "@/libs/http";
 
 export default class Sidebar extends Component {
     getClass = data => {
@@ -15,6 +16,22 @@ export default class Sidebar extends Component {
         }
         return className;
     };
+    async componentDidMount() {
+        let res = await http.get("/api/comment/list", {
+            params: {
+                isRead: 0,
+                pageIndex: 1,
+                pageSize: 1
+            }
+        });
+        if (res && res.data.total > 0) {
+            let _badge = document.createElement("span");
+            _badge.className = "badge";
+            document
+                .querySelectorAll(".sidebar ul li:nth-child(3)")[0]
+                .append(_badge);
+        }
+    }
     render() {
         return (
             <div className="sidebar">
