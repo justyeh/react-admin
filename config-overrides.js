@@ -5,6 +5,9 @@ const {
     addLessLoader
 } = require("customize-cra");
 const path = require("path");
+
+process.env.GENERATE_SOURCEMAP = "false";
+
 let config = override(
     //按需加载antd
     fixBabelImports("import", {
