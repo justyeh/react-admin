@@ -74,6 +74,7 @@ class PostForm extends Component {
 
     handleTagSearch = async val => {
         let tagList = [];
+
         let res = await http.get(`/api/tag/search?name=${val}`);
         if (
             res &&
@@ -283,7 +284,6 @@ class PostForm extends Component {
                                 <AutoComplete
                                     onSelect={this.handleTagSelect}
                                     onSearch={this.handleTagSearch}
-                                    value={this.state.autoCompleteValue}
                                     placeholder="input tag here"
                                 >
                                     {this.state.tagList.map(item => {
