@@ -27,11 +27,10 @@ class PostForm extends Component {
         super(props);
         this.state = {
             pageLoading: false,
-            tag: [],
             tagList: [],
+            dataSource: [],
             uploadPreview: "",
-            markdown: "",
-            autoCompleteValue: ""
+            markdown: ""
         };
         this.postId = getQueryVariable(this.props.location.search, "id");
         this.editorRef = React.createRef();
@@ -53,7 +52,7 @@ class PostForm extends Component {
                 status: res.data.status
             });
             this.setState({
-                tag: res.data.tagList,
+                tagList: res.data.tagList,
                 uploadPreview: res.data.poster,
                 markdown: res.data.markdown
             });
@@ -72,42 +71,63 @@ class PostForm extends Component {
         });
     };
 
-    handleTagSearch = async val => {
-        let tagList = [];
-
-        let res = await http.get(`/api/tag/search?name=${val}`);
+    handleTagSearch = async value => {
+        let dataSource = [];
+        let res = await http.get(`/api/tag/search?name=${value}`);
         if (
             res &&
-            this.state.tag.filter(item => item.name === val).length === 0
+            this.state.tagList.filter(item => item.name === value).length === 0
         ) {
-            tagList = res.data.length
-                ? res.data
-                : [{ id: -1, name: `将${val}添加到标签列表中` }];
+            dataSource = res.data.length
+                ? res.data.map(item => {
+                      return { ...item, value: item.name };
+                  })
+                : [
+                      {
+                          id: -1,
+                          name: `将${value}添加到标签列表中`,
+                          value: value
+                      }
+                  ];
         }
         this.setState({
-            autoCompleteValue: val,
-            tagList
+            dataSource
         });
     };
 
-    handleTagSelect = async val => {
-        val = parseInt(val);
+    handleTagSelect = async index => {
+        let data = this.state.dataSource[index];
 
-        let tag = this.state.tag.concat(
-            val === -1
-                ? [{ id: -1, name: this.state.autoCompleteValue }]
-                : this.state.tagList.filter(item => item.id === parseInt(val))
+        if (
+            this.state.tagList.filter(item => item.name === data.value).length >
+            0
+        ) {
+            return;
+        }
+
+        let tagList = this.state.tagList.concat(
+            data.id === -1
+                ? [{ id: -1, name: data.value }]
+                : this.state.dataSource.filter(
+                      item => item.id === parseInt(data.id)
+                  )
         );
-        this.setState({
-            tag,
-            autoCompleteValue: "",
-            tagList: []
-        });
+        this.setState(
+            {
+                tagList,
+                dataSource: []
+            },
+            () => {
+                document.querySelector(".AutoComplete input").value = "";
+            }
+        );
     };
 
-    handleTagClose(id) {
-        let tag = this.state.tag.filter(item => item.id !== id);
-        this.setState({ tag });
+    handleTagClose(data) {
+        let tagList = this.state.tagList.filter(
+            item => item.name !== data.name
+        );
+        this.setState({ tagList });
     }
 
     handleFormSubmit = () => {
@@ -129,7 +149,7 @@ class PostForm extends Component {
                     ? formValue.poster.file
                     : this.state.uploadPreview
             );
-            formData.append("tag", JSON.stringify(this.state.tag));
+            formData.append("tag", JSON.stringify(this.state.tagList));
             formData.append("summary", formValue.summary);
             formData.append("markdown", this.editorRef.current.getValue());
             formData.append("allow_comment", formValue.allow_comment);
@@ -268,13 +288,13 @@ class PostForm extends Component {
                             <FormItem label="封面">{Poster}</FormItem>
                             <FormItem label="摘要">{Summary}</FormItem>
                             <FormItem label="标签">
-                                {this.state.tag.map(item => {
+                                {this.state.tagList.map(item => {
                                     return (
                                         <Tag
                                             closable
                                             key={item.id + item.name}
                                             onClose={() =>
-                                                this.handleTagClose(item.id)
+                                                this.handleTagClose(item)
                                             }
                                         >
                                             {item.name}
@@ -284,22 +304,24 @@ class PostForm extends Component {
                                 <AutoComplete
                                     onSelect={this.handleTagSelect}
                                     onSearch={this.handleTagSearch}
+                                    className="AutoComplete"
                                     placeholder="input tag here"
                                 >
-                                    {this.state.tagList.map(item => {
-                                        return (
-                                            <Option key={item.id}>
-                                                {item.name}
-                                            </Option>
-                                        );
-                                    })}
+                                    {this.state.dataSource.map(
+                                        (item, index) => {
+                                            return (
+                                                <Option key={index}>
+                                                    {item.name}
+                                                </Option>
+                                            );
+                                        }
+                                    )}
                                 </AutoComplete>
                             </FormItem>
                             <FormItem label="正文">
                                 <MarkdownEditor
                                     value={this.state.markdown}
                                     onSave={this.handleFormSubmit}
-                                    test="11"
                                     ref={this.editorRef}
                                 />
                             </FormItem>
