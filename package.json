@@ -5,7 +5,7 @@
   "dependencies": {
     "antd": "^3.16.1",
     "axios": "^0.18.0",
-    "codemirror": "^5.45.0",
+    "codemirror": "^5.58.2",
     "highlight.js": "^9.15.6",
     "history": "^4.9.0",
     "less": "^3.9.0",
